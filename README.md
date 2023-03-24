@@ -17,3 +17,13 @@ Setup GitHooks:
 3:Copy the conf/hooks/pre-commit file to the .git/hooks directory  
 4:Make the pre-commit file executable by running the command:chmod +x .git/hooks/pre-commit  
 5:Verify that the pre-commit hook is set up correctly by running the command:pre-commit run --all-files
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`SECRET_KEY`
+
+`ALLOWED_HOSTS`
+
+`DEBUG`
+
