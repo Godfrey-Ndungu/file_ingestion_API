@@ -20,7 +20,10 @@ class UserData(Base):
     phone_number = models.CharField(max_length=20)
     email = models.EmailField()
     finger_print_signature = models.CharField(max_length=100, unique=True)
-
+    
+    class Meta:
+        ordering = ['-id']
+        
     def is_finger_print_signature_unique(self):
         """
         Checks whether the finger print signature of this model instance is unique across all existing instances.
