@@ -1,0 +1,17 @@
+[run]
+omit =
+    */venv/*
+    */manage.py
+    */settings.py
+    */wsgi.py
+    */utils.py
+    */signals.py
+    */urls.py
+    */asgi.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __str__
+    def __repr__
+    if settings.DEBUG:
