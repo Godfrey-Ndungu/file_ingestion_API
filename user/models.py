@@ -22,8 +22,21 @@ class UserData(Base):
     finger_print_signature = models.CharField(max_length=100, unique=True)
 
     def is_finger_print_signature_unique(self):
-        # check if finger print signature is unique
-        pass
+        """
+        Checks whether the finger print signature of this model instance is unique across all existing instances.
+
+        Returns:
+            True if the finger print signature is unique, False otherwise.
+        """
+        # Retrieve all instances with the same finger print signature
+        matching_instances = self.__class__.objects.filter(finger_print_signature=self.finger_print_signature)
+        
+        # Exclude this instance from the list of matching instances (if it exists)
+        if self.pk is not None:
+            matching_instances = matching_instances.exclude(pk=self.pk)
+        
+        # Return True if no other instance has the same finger print signature, False otherwise
+        return not bool(matching_instances)
 
     def save(self, *args, **kwargs):
         if not self.is_finger_print_signature_unique():
