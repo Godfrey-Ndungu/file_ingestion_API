@@ -84,3 +84,15 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ]
 }
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERYD_MAX_TASKS_PER_CHILD = 1000
+CELERY_TASK_RESULT_EXPIRES = 60 * 60 * 24
+
+# Django FSM settings
+FSM_STATE_FIELD = 'status'
