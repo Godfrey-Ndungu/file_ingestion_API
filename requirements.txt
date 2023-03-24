@@ -11,3 +11,7 @@ psycopg2==2.9.5
 python-decouple==3.8
 tox==4.4.7
 black==23.1.0
+djangorestframework==3.14.0
+markdown==3.4.3
+django-filter==22.1
+
