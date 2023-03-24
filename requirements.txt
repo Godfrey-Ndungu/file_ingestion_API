@@ -15,3 +15,5 @@ djangorestframework==3.14.0
 markdown==3.4.3
 django-filter==22.1
 django-fsm==2.8.1
+requests
+urllib3==1.22
