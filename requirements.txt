@@ -61,6 +61,9 @@ pexpect==4.8.0
 Pillow==9.0.1
 platformdirs==3.1.1
 protobuf==3.12.4
+psycopg==3.1.8
+psycopg-binary==3.1.8
+psycopg2==2.9.5
 ptyprocess==0.7.0
 pycairo==1.20.1
 pycodestyle==2.10.0
