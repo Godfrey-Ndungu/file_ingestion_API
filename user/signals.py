@@ -7,4 +7,4 @@ from .tasks import process_uploaded_file
 @receiver(post_save, sender=FileUpload)
 def start_file_upload_signal(sender, instance, created, **kwargs):
     if created:
-        process_uploaded_file(instance.id)
+        process_uploaded_file.delay(instance.id)
