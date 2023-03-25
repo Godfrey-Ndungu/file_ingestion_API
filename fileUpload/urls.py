@@ -24,6 +24,5 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
-     path('', RedirectView.as_view(url='v1/')),
-    
+    path('', RedirectView.as_view(url='v1/')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
