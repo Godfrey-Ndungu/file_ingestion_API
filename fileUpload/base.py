@@ -99,6 +99,7 @@ FSM_STATE_FIELD = "status"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'EXCEPTION_HANDLER': 'user.handler.custom_exception_handler'
 }
 
 SPECTACULAR_SETTINGS = {
