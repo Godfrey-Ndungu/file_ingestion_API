@@ -66,7 +66,7 @@ class RowDataValidator:
         # check fingerprint signature is in hash form
 
         # Check if finger_print_signature is already in UserData
-        if not UserData.objects.filter(
+        if UserData.objects.filter(
             finger_print_signature=finger_print_signature
         ).exists():
             return False
