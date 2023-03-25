@@ -36,3 +36,56 @@ To run tests, run the following command
   tox
 ```
 
+
+## API Reference
+
+#### Put csv file
+
+```http
+  PUT /v1/file-upload/
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `numeric` |  |
+| `file` | `string` | **Required**.  csv file |
+| `status` | `string` |  |
+
+#### Get item
+
+```http
+  GET /v1/users/
+```
+{
+  "count": 123,
+  "next": "/accounts/?page=4",
+  "previous": "/?page=2",
+  "results": [
+    {
+      "first_name": "string",
+      "last_name": "string",
+      "national_id": "string",
+      "birth_date": "2023-03-25",
+      "address": "string",
+      "country": "string",
+      "phone_number": "string",
+      "email": "user@example.com",
+      "finger_print_signature": "string"
+    }
+  ]
+}
+
+full  documentation can be found here:
+
+```http
+swagger:  /v1/api/schema/swagger-ui/
+```
+```http
+redoc:    /v1/api/schema/redoc/
+```
+```http
+```
+```http
+```
+
+

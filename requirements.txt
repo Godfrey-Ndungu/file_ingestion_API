@@ -19,3 +19,5 @@ requests
 urllib3==1.22
 celery==5.2.7
 redis==4.5.3
+drf-spectacular==0.26.1
+drf-spectacular-sidecar==2023.3.1
