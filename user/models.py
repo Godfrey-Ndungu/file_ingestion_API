@@ -65,7 +65,7 @@ class FileUpload(Base):
         (FILE_STATUS_FAILED, "Failed"),
     )
 
-    file = models.FileField(upload_to="uploads/")
+    file = models.FileField(upload_to="media/uploads/")
     status = FSMField(default=FILE_STATUS_PENDING, choices=FILE_STATUSES)
 
     @transition(field=status, source=FILE_STATUS_PENDING,
