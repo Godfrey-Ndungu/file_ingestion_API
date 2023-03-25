@@ -22,19 +22,28 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
     """
     A viewset for listing user data.
 
-    This viewset allows clients to retrieve a list of user data using various filters, search criteria,
-    and sorting options. The `UserDataSerializer` is used to serialize the user data.
+    This viewset allows clients to retrieve a
+    list of user data using various filters, search criteria,
+    and sorting options. The `UserDataSerializer`
+    is used to serialize the user data.
 
-    Available filter options include `first_name`, `last_name`, `phone_number`, `email`, and `birth_date`.
-    One can also search for users based on any of these fields using the `search` query parameter.
-    Sorting can be performed on the `first_name`, `last_name`, and `birth_date` fields using the `ordering`
+    Available filter options include `first_name`, `
+    last_name`, `phone_number`, `email`, and `birth_date`.
+    One can also search for users based on any of these
+    fields using the `search` query parameter.
+    Sorting can be performed on the `first_name`, `last_name`,
+      and `birth_date` fields using the `ordering`
     query parameter.
 
-    Additionally, clients can filter users based on a range of birth dates using the `birth_date` query parameter.
-    This parameter should be specified as a comma-separated string with two values: the start date and the end date.
+    Additionally, clients can filter users based on a range
+    of birth dates using the `birth_date` query parameter.
+    This parameter should be specified as a comma-separated
+    string with two values: the start date and the end date.
 
-    By default, this viewset uses the `UserPagination` class for pagination.
+    By default, this viewset uses the `UserPagination` class
+    for pagination.
     """
+
     serializer_class = UserDataSerializer
     queryset = UserData.objects.all()
     filter_backends = [
@@ -68,22 +77,25 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
 
 class FileUploadViewSet(ModelViewSet):
     """
-        Viewset for uploading CSV files.
+    Viewset for uploading CSV files.
 
-        Attributes:
-            parser_classes (list): List of parser classes to use.
-            serializer_class (Serializer): Serializer class to use.
-            queryset (QuerySet): QuerySet of objects to use.
+    Attributes:
+        parser_classes (list): List of parser classes to use.
+        serializer_class (Serializer): Serializer class to use.
+        queryset (QuerySet): QuerySet of objects to use.
 
-        Methods:
-            create(request): Creates a new file upload object and saves the uploaded file.
+    Methods:
+        create(request): Creates a new file upload object
+          and saves the uploaded file.
 
-        Raises:
-            ValidationError: If the uploaded file is not a CSV file.
+    Raises:
+        ValidationError: If the uploaded file is not a CSV file.
 
-        Returns:
-            Response: HTTP response object containing the serialized file upload object.
+    Returns:
+        Response: HTTP response object containing the
+        serialized file upload object.
     """
+
     parser_classes = [MultiPartParser, FormParser]
     serializer_class = FileUploadSerializer
     queryset = FileUpload.objects.all()
