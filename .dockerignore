@@ -1,0 +1,31 @@
+# Ignore development files
+**/node_modules
+**/bower_components
+**/dist
+**/build
+**/logs
+**/media
+**/staticfiles
+
+# Ignore Git files
+**/.git
+**/.gitignore
+
+# Ignore editor files
+**/*.swp
+**/*.swo
+**/*.log
+
+# Ignore Python bytecode
+**/__pycache__
+
+# Ignore Docker files
+**/.dockerignore
+**/Dockerfile
+**/docker-compose.yml
+
+# Ignore other files
+*.pyc
+*.pyo
+*.pyd
+*.psql
