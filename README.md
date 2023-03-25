@@ -89,3 +89,18 @@ redoc:    /v1/api/schema/redoc/
 ```
 
 
+
+## Installation
+
+Setting background workers using redis and celery
+
+```bash
+    sudo apt-get install redis-server
+    sudo service redis-server start
+```
+activate python virtual environment and run celery using:
+```bash
+celery -A fileUpload worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair --pool=solo
+
+```
+    
