@@ -15,10 +15,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'rest_framework',
-    'django_filters',
-    'django_fsm',
-    'user',
+    "rest_framework",
+    "django_filters",
+    "django_fsm",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -74,25 +76,37 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-      
-        'rest_framework.renderers.BrowsableAPIRenderer',
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
     ],
-    'DEFAULT_PARSER_CLASSES':
-    [
-        'rest_framework.parsers.JSONParser',
-    ]
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
+    ],
 }
 
 # Celery settings
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 CELERYD_MAX_TASKS_PER_CHILD = 1000
 CELERY_TASK_RESULT_EXPIRES = 60 * 60 * 24
 
 # Django FSM settings
-FSM_STATE_FIELD = 'status'
+FSM_STATE_FIELD = "status"
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "FilE INGESTION",
+    "DESCRIPTION": "Process Files",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_DIST": "SIDECAR",  # shorthand to use the sidecar instead
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+}
