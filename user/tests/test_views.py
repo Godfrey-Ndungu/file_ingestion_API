@@ -73,8 +73,7 @@ class FileUploadViewSetTestCase(TestCase):
     def test_upload_file(self):
         file_data = io.BytesIO(b"csv_file_content")
         file = SimpleUploadedFile(
-            "file.csv", file_data.getvalue(),
-            content_type="text/csv"
+            "file.csv", file_data.getvalue(), content_type="text/csv"
         )
         response = self.client.post(
             "/v1/file-upload/", {"file": file}, format="multipart"
@@ -84,7 +83,7 @@ class FileUploadViewSetTestCase(TestCase):
         self.assertEqual(
             response.data, FileUploadSerializer(
                 FileUpload.objects.first()).data
-            )
+        )
 
     def test_upload_invalid_file_type(self):
         file_data = io.BytesIO(
