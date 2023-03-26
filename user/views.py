@@ -109,26 +109,85 @@ class FileUploadViewSet(
     viewsets.GenericViewSet,
 ):
     """
-    Viewset for uploading CSV files.
+    API Documentation
+        ------------------
 
-    Attributes:
-        parser_classes (list): List of parser classes to use.
-        serializer_class (Serializer): Serializer class to use.
-        permission_classes (list): List of permission classes to use.
-        queryset (QuerySet): QuerySet of objects to use.
+        API root: /v1/
 
-    Methods:
-        create(request): Creates a new file upload object
-          and saves the uploaded file.
-        retrieve(request, pk): Retrieves a specific file upload object.
-        list(request): Retrieves a list of file upload objects.
+        Endpoints:
+        - POST /file-upload/
+            Creates a new file upload object and saves the uploaded file.
+            Request parameters:
+                - file: the CSV file to be uploaded.
+            Response:
+                - 201 CREATED: Returns the serialized file upload object on success.
+                - 400 BAD REQUEST: Returns an error message if the file is not uploaded, or if the uploaded file is empty or not a CSV file.
 
-    Raises:
-        ValidationError: If the uploaded file is not a CSV file.
+        - GET /file-upload/<pk>/
+            Retrieves a specific file upload object.
+            Request parameters:
+                - pk: the primary key of the file upload object.
+            Response:
+                - 200 OK: Returns the serialized file upload object on success.
+                - 404 NOT FOUND: Returns an error message if the specified file upload object does not exist.
 
-    Returns:
-        Response: HTTP response object containing the
-        serialized file upload object.
+        - GET /file-upload/
+            Retrieves a list of file upload objects.
+            Response:
+                - 200 OK: Returns a paginated list of serialized file upload objects on success.
+                - 404 NOT FOUND: Returns an error message if there are no file upload objects.
+
+        Example Requests and Responses:
+        -------------------------------
+
+        POST /v1/file-upload/
+        Request:
+            Content-Disposition: form-data; name="file"; filename="example.csv"
+            Content-Type: text/csv
+
+            id,name,age
+            1,Alice,25
+            2,Bob,30
+
+        Response:
+            HTTP 201 Created
+            Content-Type: application/json
+
+            {
+                "id": 1,
+                "file": "http://localhost:8000/media/example.csv",
+                "status": "PENDING"
+            }
+
+        GET /v1/file-upload/1/
+        Response:
+            HTTP 200 OK
+            Content-Type: application/json
+
+            {
+                "id": 1,
+                "file": "http://localhost:8000/media/example.csv",
+                "status": "PENDING"
+            }
+
+        GET /v1/file-upload/
+        Response:
+            HTTP 200 OK
+            Content-Type: application/json
+
+            {
+                "count": 1,
+                "next": null,
+                "previous": null,
+                "results": [
+                    {
+                        "id": 1,
+                        "file": "http://localhost:8000/media/example.csv",
+                        "status": "PENDING"
+                    }
+                ]
+            }
+
     """
 
     parser_classes = [MultiPartParser, FormParser]
