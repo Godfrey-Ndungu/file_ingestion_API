@@ -103,6 +103,17 @@ class FileUploadViewSet(ModelViewSet):
     def create(self, request):
         file_obj = request.FILES.get("file")
         extension_validator = FileExtensionValidator()
+        # Check if file exists and is not empty
+        if not file_obj:
+            return Response(
+                {"error": "No file uploaded."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        elif file_obj.size == 0:
+            return Response(
+                {"error": "File is empty."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         # Validate file extension
         if not extension_validator.is_csv(file_obj.name):
