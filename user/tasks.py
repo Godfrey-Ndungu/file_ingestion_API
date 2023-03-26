@@ -12,8 +12,6 @@ logger = logging.getLogger()
 def process_uploaded_file(id):
     file = FileUpload.objects.filter(id=id).first()
     if not file:
-        file.mark_failed()
-        file.save()
         return
 
     file.start_processing()
