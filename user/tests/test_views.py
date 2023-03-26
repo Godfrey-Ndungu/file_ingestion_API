@@ -81,7 +81,8 @@ class FileUploadViewSetTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(FileUpload.objects.count(), 1)
         self.assertEqual(
-            response.data, FileUploadSerializer(FileUpload.objects.first()).data
+            response.data, FileUploadSerializer(
+                FileUpload.objects.first()).data
         )
 
     def test_upload_invalid_file_type(self):
@@ -96,6 +97,7 @@ class FileUploadViewSetTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data, {"error": "Invalid file type. Only CSV files are allowed."}
+            response.data, {
+                "error": "Invalid file type. Only CSV files are allowed."}
         )
         self.assertEqual(FileUpload.objects.count(), 0)
