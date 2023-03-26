@@ -97,8 +97,7 @@ class FileUpload(Base):
         pass
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.start_processing()
+        # Save the file first
         super().save(*args, **kwargs)
 
     def filename(self):
