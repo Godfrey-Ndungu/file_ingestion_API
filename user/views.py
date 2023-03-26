@@ -58,8 +58,7 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
         "email",
         "birth_date",
     ]
-    search_fields = ["first_name", "last_name",
-                     "phone_number", "email", "birth_date"]
+    search_fields = ["first_name", "last_name", "phone_number", "email", "birth_date"]
     ordering_fields = ["first_name", "last_name", "birth_date"]
     pagination_class = UserPagination
 
@@ -69,8 +68,7 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
         birth_date_range = self.request.query_params.get("birth_date", None)
         if birth_date_range:
             start_date, end_date = birth_date_range.split(",")
-            queryset = queryset.filter(
-                birth_date__range=[start_date, end_date])
+            queryset = queryset.filter(birth_date__range=[start_date, end_date])
 
         return queryset
 
