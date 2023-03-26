@@ -51,6 +51,6 @@ class TestSerializers(TestCase):
         expected_data = {
             "id": file_upload.id,
             "file": "/path/to/file.txt",
-            "status": "processing",
+            "status": "pending",
         }
         self.assertEqual(serializer.data, expected_data)

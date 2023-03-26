@@ -1,12 +1,16 @@
-from rest_framework.parsers import FormParser, MultiPartParser
 from django.db import transaction
-from rest_framework.response import Response
-from rest_framework import status
+from django.http import Http404
+
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework import filters
 from rest_framework import pagination
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import GenericViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.mixins import ListModelMixin
+from rest_framework import mixins, status, viewsets
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+
 from .models import UserData, FileUpload
 from .serializers import UserDataSerializer, FileUploadSerializer
 from .utils import FileExtensionValidator
@@ -58,8 +62,7 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
         "email",
         "birth_date",
     ]
-    search_fields = ["first_name", "last_name",
-                     "phone_number", "email", "birth_date"]
+    search_fields = ["first_name", "last_name", "phone_number", "email", "birth_date"]
     ordering_fields = ["first_name", "last_name", "birth_date"]
     pagination_class = UserPagination
 
@@ -69,24 +72,31 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
         birth_date_range = self.request.query_params.get("birth_date", None)
         if birth_date_range:
             start_date, end_date = birth_date_range.split(",")
-            queryset = queryset.filter(
-                birth_date__range=[start_date, end_date])
+            queryset = queryset.filter(birth_date__range=[start_date, end_date])
 
         return queryset
 
 
-class FileUploadViewSet(ModelViewSet):
+class FileUploadViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
     """
     Viewset for uploading CSV files.
 
     Attributes:
         parser_classes (list): List of parser classes to use.
         serializer_class (Serializer): Serializer class to use.
+        permission_classes (list): List of permission classes to use.
         queryset (QuerySet): QuerySet of objects to use.
 
     Methods:
         create(request): Creates a new file upload object
           and saves the uploaded file.
+        retrieve(request, pk): Retrieves a specific file upload object.
+        list(request): Retrieves a list of file upload objects.
 
     Raises:
         ValidationError: If the uploaded file is not a CSV file.
@@ -98,11 +108,13 @@ class FileUploadViewSet(ModelViewSet):
 
     parser_classes = [MultiPartParser, FormParser]
     serializer_class = FileUploadSerializer
+    permission_classes = [AllowAny]
     queryset = FileUpload.objects.all()
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         file_obj = request.FILES.get("file")
         extension_validator = FileExtensionValidator()
+
         # Check if file exists and is not empty
         if not file_obj:
             return Response(
@@ -129,4 +141,26 @@ class FileUploadViewSet(ModelViewSet):
             )
             file_upload.save()
 
-        return Response(FileUploadSerializer(file_upload).data)
+        return Response(
+            FileUploadSerializer(file_upload).data,
+            status=status.HTTP_201_CREATED
+                        )
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        try:
+            file_upload = self.get_object()
+        except Http404:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = FileUploadSerializer(file_upload)
+        return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = FileUploadSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = FileUploadSerializer(queryset, many=True)
+        return Response(serializer.data)
