@@ -24,28 +24,53 @@ class UserPagination(pagination.PageNumberPagination):
 
 class UserDataViewSet(ListModelMixin, GenericViewSet):
     """
-    A viewset for listing user data.
+    API Documentation:
 
-    This viewset allows clients to retrieve a
-    list of user data using various filters, search criteria,
-    and sorting options. The `UserDataSerializer`
-    is used to serialize the user data.
+        API Root: /v1/
 
-    Available filter options include `first_name`, `
-    last_name`, `phone_number`, `email`, and `birth_date`.
-    One can also search for users based on any of these
-    fields using the `search` query parameter.
-    Sorting can be performed on the `first_name`, `last_name`,
-      and `birth_date` fields using the `ordering`
-    query parameter.
+        Endpoint: /v1/user-data/
+        Methods: GET
+        Description: Get a list of user data based on various filters, search criteria, and sorting options.
 
-    Additionally, clients can filter users based on a range
-    of birth dates using the `birth_date` query parameter.
-    This parameter should be specified as a comma-separated
-    string with two values: the start date and the end date.
+        Query Parameters:
+        - first_name: Filter by user's first name
+        - last_name: Filter by user's last name
+        - phone_number: Filter by user's phone number
+        - email: Filter by user's email
+        - birth_date: Filter by user's birth date within a specified range (comma-separated start and end dates)
+        - search: Search for users based on any of the filter fields
+        - ordering: Sort the results by first_name, last_name, or birth_date in ascending or descending order
 
-    By default, this viewset uses the `UserPagination` class
-    for pagination.
+        Expected Response:
+        {
+            "count": 2,
+            "next": "http://localhost:8000/v1/users/?page=2",
+            "previous": null,
+            "results": [
+                {
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "national_id": "1234567890",
+                    "birth_date": "1990-01-01",
+                    "address": "123 Main St",
+                    "country": "USA",
+                    "phone_number": "123-456-7890",
+                    "email": "john.doe@example.com",
+                    "finger_print_signature": "abc123"
+                },
+                {
+                    "first_name": "Jane",
+                    "last_name": "Doe",
+                    "national_id": "0987654321",
+                    "birth_date": "1992-05-15",
+                    "address": "456 Oak St",
+                    "country": "USA",
+                    "phone_number": "555-555-5555",
+                    "email": "jane.doe@example.com",
+                    "finger_print_signature": "def456"
+                }
+            ]
+        }
     """
 
     serializer_class = UserDataSerializer
@@ -84,26 +109,85 @@ class FileUploadViewSet(
     viewsets.GenericViewSet,
 ):
     """
-    Viewset for uploading CSV files.
+    API Documentation
+        ------------------
 
-    Attributes:
-        parser_classes (list): List of parser classes to use.
-        serializer_class (Serializer): Serializer class to use.
-        permission_classes (list): List of permission classes to use.
-        queryset (QuerySet): QuerySet of objects to use.
+        API root: /v1/
 
-    Methods:
-        create(request): Creates a new file upload object
-          and saves the uploaded file.
-        retrieve(request, pk): Retrieves a specific file upload object.
-        list(request): Retrieves a list of file upload objects.
+        Endpoints:
+        - POST /file-upload/
+            Creates a new file upload object and saves the uploaded file.
+            Request parameters:
+                - file: the CSV file to be uploaded.
+            Response:
+                - 201 CREATED: Returns the serialized file upload object on success.
+                - 400 BAD REQUEST: Returns an error message if the file is not uploaded, or if the uploaded file is empty or not a CSV file.
 
-    Raises:
-        ValidationError: If the uploaded file is not a CSV file.
+        - GET /file-upload/<pk>/
+            Retrieves a specific file upload object.
+            Request parameters:
+                - pk: the primary key of the file upload object.
+            Response:
+                - 200 OK: Returns the serialized file upload object on success.
+                - 404 NOT FOUND: Returns an error message if the specified file upload object does not exist.
 
-    Returns:
-        Response: HTTP response object containing the
-        serialized file upload object.
+        - GET /file-upload/
+            Retrieves a list of file upload objects.
+            Response:
+                - 200 OK: Returns a paginated list of serialized file upload objects on success.
+                - 404 NOT FOUND: Returns an error message if there are no file upload objects.
+
+        Example Requests and Responses:
+        -------------------------------
+
+        POST /v1/file-upload/
+        Request:
+            Content-Disposition: form-data; name="file"; filename="example.csv"
+            Content-Type: text/csv
+
+            id,name,age
+            1,Alice,25
+            2,Bob,30
+
+        Response:
+            HTTP 201 Created
+            Content-Type: application/json
+
+            {
+                "id": 1,
+                "file": "http://localhost:8000/media/example.csv",
+                "status": "PENDING"
+            }
+
+        GET /v1/file-upload/1/
+        Response:
+            HTTP 200 OK
+            Content-Type: application/json
+
+            {
+                "id": 1,
+                "file": "http://localhost:8000/media/example.csv",
+                "status": "PENDING"
+            }
+
+        GET /v1/file-upload/
+        Response:
+            HTTP 200 OK
+            Content-Type: application/json
+
+            {
+                "count": 1,
+                "next": null,
+                "previous": null,
+                "results": [
+                    {
+                        "id": 1,
+                        "file": "http://localhost:8000/media/example.csv",
+                        "status": "PENDING"
+                    }
+                ]
+            }
+
     """
 
     parser_classes = [MultiPartParser, FormParser]
