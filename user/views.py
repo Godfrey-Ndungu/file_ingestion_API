@@ -30,16 +30,19 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
 
         Endpoint: /v1/user-data/
         Methods: GET
-        Description: Get a list of user data based on various filters, search criteria, and sorting options.
+        Description: Get a list of user data based on
+        various filters, search criteria, and sorting options.
 
         Query Parameters:
         - first_name: Filter by user's first name
         - last_name: Filter by user's last name
         - phone_number: Filter by user's phone number
         - email: Filter by user's email
-        - birth_date: Filter by user's birth date within a specified range (comma-separated start and end dates)
+        - birth_date: Filter by user's birth date within
+          a specified range (comma-separated start and end dates)
         - search: Search for users based on any of the filter fields
-        - ordering: Sort the results by first_name, last_name, or birth_date in ascending or descending order
+        - ordering: Sort the results by first_name, last_name,
+            or birth_date in ascending or descending order
 
         Expected Response:
         {
@@ -87,7 +90,8 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
         "email",
         "birth_date",
     ]
-    search_fields = ["first_name", "last_name", "phone_number", "email", "birth_date"]
+    search_fields = ["first_name", "last_name",
+                     "phone_number", "email", "birth_date"]
     ordering_fields = ["first_name", "last_name", "birth_date"]
     pagination_class = UserPagination
 
@@ -97,7 +101,8 @@ class UserDataViewSet(ListModelMixin, GenericViewSet):
         birth_date_range = self.request.query_params.get("birth_date", None)
         if birth_date_range:
             start_date, end_date = birth_date_range.split(",")
-            queryset = queryset.filter(birth_date__range=[start_date, end_date])
+            queryset = queryset.filter(
+                birth_date__range=[start_date, end_date])
 
         return queryset
 
@@ -120,8 +125,11 @@ class FileUploadViewSet(
             Request parameters:
                 - file: the CSV file to be uploaded.
             Response:
-                - 201 CREATED: Returns the serialized file upload object on success.
-                - 400 BAD REQUEST: Returns an error message if the file is not uploaded, or if the uploaded file is empty or not a CSV file.
+                - 201 CREATED: Returns the serialized file
+                    upload object on success.
+                - 400 BAD REQUEST: Returns an error message if the
+                    file is not uploaded, or if the uploaded file
+                    is empty or not a CSV file.
 
         - GET /file-upload/<pk>/
             Retrieves a specific file upload object.
@@ -129,13 +137,16 @@ class FileUploadViewSet(
                 - pk: the primary key of the file upload object.
             Response:
                 - 200 OK: Returns the serialized file upload object on success.
-                - 404 NOT FOUND: Returns an error message if the specified file upload object does not exist.
+                - 404 NOT FOUND: Returns an error message
+                if the specified file upload object does not exist.
 
         - GET /file-upload/
             Retrieves a list of file upload objects.
             Response:
-                - 200 OK: Returns a paginated list of serialized file upload objects on success.
-                - 404 NOT FOUND: Returns an error message if there are no file upload objects.
+                - 200 OK: Returns a paginated list of
+                    serialized file upload objects on success.
+                - 404 NOT FOUND: Returns an error message if
+                    there are no file upload objects.
 
         Example Requests and Responses:
         -------------------------------
@@ -228,7 +239,7 @@ class FileUploadViewSet(
         return Response(
             FileUploadSerializer(file_upload).data,
             status=status.HTTP_201_CREATED
-                        )
+        )
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         try:
