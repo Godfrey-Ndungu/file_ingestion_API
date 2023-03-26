@@ -12,9 +12,15 @@ logger = logging.getLogger()
 def process_uploaded_file(id):
     file = FileUpload.objects.filter(id=id).first()
     if not file:
+        file.mark_failed()
+        file.save()
         return
 
+    file.start_processing()
+    file.save()
+
     file_path = str(file.file.path)
+
     try:
         headers_are_valid = FileHeaderValidator.is_valid(file_path)
         if not headers_are_valid:
@@ -22,9 +28,6 @@ def process_uploaded_file(id):
 
         # Read the file using FileReader
         rows = FileReader.read_file(file_path)
-
-        # Update file upload status to 'processing'
-        file.start_processing()
 
         # Iterate over each row in the CSV file,
         # validate its data, and save it to the UserData model
@@ -43,19 +46,22 @@ def process_uploaded_file(id):
                 )
                 user_data.save()
 
-    # Update file upload status to 'processed'
+        # Update file upload status to 'processed'
         file.mark_processed()
+        file.save()
 
     except ValueError as exc:
         logger.error(f"Failed to process uploaded file: {exc}")
-        # Update file upload status to 'failed'
-        file.mark_failed()
+        file.mark_processing_failed()
+        file.save()
+
         raise process_uploaded_file.retry(exc=exc, max_retries=3)
 
     except Exception as exc:
         logger.error(f"Failed to process uploaded file: {exc}")
-        # Update file upload status to 'failed'
-        file.mark_failed()
+        file.mark_processing_failed()
+        file.save()
+
         raise process_uploaded_file.retry(exc=exc, max_retries=3)
 
     logger.info(f"Successfully processed uploaded file: {file_path}")
