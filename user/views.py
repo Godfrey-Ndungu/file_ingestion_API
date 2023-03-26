@@ -24,28 +24,53 @@ class UserPagination(pagination.PageNumberPagination):
 
 class UserDataViewSet(ListModelMixin, GenericViewSet):
     """
-    A viewset for listing user data.
+    API Documentation:
 
-    This viewset allows clients to retrieve a
-    list of user data using various filters, search criteria,
-    and sorting options. The `UserDataSerializer`
-    is used to serialize the user data.
+        API Root: /v1/
 
-    Available filter options include `first_name`, `
-    last_name`, `phone_number`, `email`, and `birth_date`.
-    One can also search for users based on any of these
-    fields using the `search` query parameter.
-    Sorting can be performed on the `first_name`, `last_name`,
-      and `birth_date` fields using the `ordering`
-    query parameter.
+        Endpoint: /v1/user-data/
+        Methods: GET
+        Description: Get a list of user data based on various filters, search criteria, and sorting options.
 
-    Additionally, clients can filter users based on a range
-    of birth dates using the `birth_date` query parameter.
-    This parameter should be specified as a comma-separated
-    string with two values: the start date and the end date.
+        Query Parameters:
+        - first_name: Filter by user's first name
+        - last_name: Filter by user's last name
+        - phone_number: Filter by user's phone number
+        - email: Filter by user's email
+        - birth_date: Filter by user's birth date within a specified range (comma-separated start and end dates)
+        - search: Search for users based on any of the filter fields
+        - ordering: Sort the results by first_name, last_name, or birth_date in ascending or descending order
 
-    By default, this viewset uses the `UserPagination` class
-    for pagination.
+        Expected Response:
+        {
+            "count": 2,
+            "next": "http://localhost:8000/v1/users/?page=2",
+            "previous": null,
+            "results": [
+                {
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "national_id": "1234567890",
+                    "birth_date": "1990-01-01",
+                    "address": "123 Main St",
+                    "country": "USA",
+                    "phone_number": "123-456-7890",
+                    "email": "john.doe@example.com",
+                    "finger_print_signature": "abc123"
+                },
+                {
+                    "first_name": "Jane",
+                    "last_name": "Doe",
+                    "national_id": "0987654321",
+                    "birth_date": "1992-05-15",
+                    "address": "456 Oak St",
+                    "country": "USA",
+                    "phone_number": "555-555-5555",
+                    "email": "jane.doe@example.com",
+                    "finger_print_signature": "def456"
+                }
+            ]
+        }
     """
 
     serializer_class = UserDataSerializer
