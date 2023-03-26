@@ -78,7 +78,7 @@ class FileUploadViewSetTestCase(TestCase):
         response = self.client.post(
             "/v1/file-upload/", {"file": file}, format="multipart"
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(FileUpload.objects.count(), 1)
         self.assertEqual(
             response.data, FileUploadSerializer(
