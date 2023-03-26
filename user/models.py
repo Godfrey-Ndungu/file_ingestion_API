@@ -68,8 +68,7 @@ class FileUpload(Base):
     file = models.FileField(upload_to="media/uploads/")
     status = FSMField(default=FILE_STATUS_PENDING, choices=FILE_STATUSES)
 
-    @transition(field=status, source=FILE_STATUS_PENDING,
-                target=FILE_STATUS_PROCESSING)
+    @transition(field=status, source=FILE_STATUS_PENDING, target=FILE_STATUS_PROCESSING)
     def start_processing(self):
         pass
 
@@ -82,8 +81,7 @@ class FileUpload(Base):
         pass
 
     @transition(
-        field=status, source=FILE_STATUS_PROCESSING,
-        target=FILE_STATUS_PROCESSED
+        field=status, source=FILE_STATUS_PROCESSING, target=FILE_STATUS_PROCESSED
     )
     def mark_processed(self):
         pass

@@ -13,10 +13,12 @@ def custom_exception_handler(exc, context):
             message = "The requested resource could not be found."
         # Check for 500 error
         elif response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR:
-            message = "An internal server error occurred. Please try again later." # noqa
+            message = (
+                "An internal server error occurred. Please try again later."  # noqa
+            )
         # For all other errors
         else:
-            message = "An error occurred while processing your request. Please try again later." # noqa
+            message = "An error occurred while processing your request. Please try again later."  # noqa
 
         # Create the response data with custom error message
         response.data = {

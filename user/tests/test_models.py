@@ -40,15 +40,13 @@ class UserDataTestCase(TestCase):
 
 class FileUploadTestCase(TestCase):
     def setUp(self):
-        self.file_upload = FileUpload.objects.create(
-            file="uploads/test_file.csv")
+        self.file_upload = FileUpload.objects.create(file="uploads/test_file.csv")
 
     def test_file_upload_created_successfully(self):
         self.assertEqual(FileUpload.objects.count(), 1)
 
     def test_start_processing_transition(self):
-        self.assertEqual(self.file_upload.status,
-                         FileUpload.FILE_STATUS_PROCESSING)
+        self.assertEqual(self.file_upload.status, FileUpload.FILE_STATUS_PROCESSING)
 
     def test_mark_failed_transition_from_pending(self):
         file_upload = FileUpload.objects.create(file="uploads/test_file.csv")
@@ -57,24 +55,20 @@ class FileUploadTestCase(TestCase):
 
     def test_mark_failed_transition_from_processing(self):
         self.file_upload.mark_failed()
-        self.assertEqual(self.file_upload.status,
-                         FileUpload.FILE_STATUS_FAILED)
+        self.assertEqual(self.file_upload.status, FileUpload.FILE_STATUS_FAILED)
 
     def test_mark_processed_transition(self):
         self.file_upload.mark_processed()
-        self.assertEqual(self.file_upload.status,
-                         FileUpload.FILE_STATUS_PROCESSED)
+        self.assertEqual(self.file_upload.status, FileUpload.FILE_STATUS_PROCESSED)
 
     def test_mark_processing_failed_transition_from_pending(self):
         file_upload = FileUpload.objects.create(file="uploads/test_file.csv")
         file_upload.mark_processing_failed()
-        self.assertEqual(file_upload.status,
-                         FileUpload.FILE_STATUS_FAILED)
+        self.assertEqual(file_upload.status, FileUpload.FILE_STATUS_FAILED)
 
     def test_mark_processing_failed_transition_from_processing(self):
         self.file_upload.mark_processing_failed()
-        self.assertEqual(self.file_upload.status,
-                         FileUpload.FILE_STATUS_FAILED)
+        self.assertEqual(self.file_upload.status, FileUpload.FILE_STATUS_FAILED)
 
     def test_filename(self):
         self.assertEqual(self.file_upload.filename(), "test_file.csv")
