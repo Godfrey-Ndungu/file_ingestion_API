@@ -8,10 +8,65 @@ from typing import Dict
 class FileExtensionValidator:
     """Utility class for validating file extensions."""
 
-    @staticmethod
-    def is_csv(filename):
-        """Validates if the file extension is CSV."""
+    def __init__(self, allowed_extensions):
+        """
+        Initializes a FileExtensionValidator
+        object with a list of allowed extensions.
+
+        Args:
+            allowed_extensions (list of str):
+            A list of allowed extensions (e.g. ['.csv', '.xls']).
+        """
+        self.allowed_extensions = allowed_extensions
+
+    def is_csv(self, filename):
+        """
+        Validates if the file extension is CSV.
+
+        Args:
+            filename (str): The filename to validate.
+
+        Returns:
+            bool: True if the file extension is CSV, False otherwise.
+        """
         return filename.endswith(".csv")
+
+    def is_xls(self, filename):
+        """
+        Validates if the file extension is XLS.
+
+        Args:
+            filename (str): The filename to validate.
+
+        Returns:
+            bool: True if the file extension is XLS, False otherwise.
+        """
+        return filename.endswith(".xls")
+
+    def is_valid_extension(self, filename):
+        """
+        Validates if the file extension is allowed.
+
+        Args:
+            filename (str): The filename to validate.
+
+        Returns:
+            bool: True if the file extension is allowed, False otherwise.
+        """
+        return any(filename.endswith(ext) for ext in self.allowed_extensions)
+
+    def validate_file(self, filename):
+        """
+        Validates if the file extension is allowed.
+
+        Args:
+            filename (str): The filename to validate.
+
+        Raises:
+            ValueError: If the file extension is not allowed.
+        """
+        if not self.is_valid_extension(filename):
+            raise ValueError("extension not allowed")
 
 
 class FileHeaderValidator:
