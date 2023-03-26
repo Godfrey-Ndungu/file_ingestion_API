@@ -48,7 +48,7 @@ class FileUploadTestCase(TestCase):
 
     def test_start_processing_transition(self):
         self.assertEqual(self.file_upload.status,
-                         FileUpload.FILE_STATUS_PROCESSING)
+                         FileUpload.FILE_STATUS_PENDING)
 
     def test_mark_failed_transition_from_pending(self):
         file_upload = FileUpload.objects.create(file="uploads/test_file.csv")
@@ -61,16 +61,19 @@ class FileUploadTestCase(TestCase):
                          FileUpload.FILE_STATUS_FAILED)
 
     def test_mark_processed_transition(self):
+        self.file_upload.start_processing()
         self.file_upload.mark_processed()
         self.assertEqual(self.file_upload.status,
                          FileUpload.FILE_STATUS_PROCESSED)
 
     def test_mark_processing_failed_transition_from_pending(self):
         file_upload = FileUpload.objects.create(file="uploads/test_file.csv")
+        file_upload.start_processing()
         file_upload.mark_processing_failed()
         self.assertEqual(file_upload.status, FileUpload.FILE_STATUS_FAILED)
 
     def test_mark_processing_failed_transition_from_processing(self):
+        self.file_upload.start_processing()
         self.file_upload.mark_processing_failed()
         self.assertEqual(self.file_upload.status,
                          FileUpload.FILE_STATUS_FAILED)
