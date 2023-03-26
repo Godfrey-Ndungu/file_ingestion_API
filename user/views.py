@@ -208,7 +208,7 @@ class FileUploadViewSet(
 
     def create(self, request, *args, **kwargs):
         file_obj = request.FILES.get("file")
-        extension_validator = FileExtensionValidator()
+        extension_validator = FileExtensionValidator([".csv",])
 
         # Check if file exists and is not empty
         if not file_obj:
@@ -223,9 +223,9 @@ class FileUploadViewSet(
             )
 
         # Validate file extension
-        if not extension_validator.is_csv(file_obj.name):
+        if not extension_validator.is_valid_extension(file_obj.name):
             return Response(
-                {"error": "Invalid file type. Only CSV files are allowed."},
+                {"error": f"Invalid file type. Only {', '.join(extension_validator.allowed_extensions)} files are allowed."},# noqa
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
