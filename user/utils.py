@@ -1,5 +1,6 @@
 from .models import UserData
 
+import hashlib
 import re
 import datetime
 from typing import Dict
@@ -117,9 +118,12 @@ class RowDataValidator:
             return False
 
         finger_print_signature = row_data.get("finger_print_signature", "")
-        # TODO:
-        # check fingerprint signature is in hash form
 
+        # check fingerprint signature is in hash form
+        if not RowDataValidator.is_hashed(
+            finger_print_signature
+        ):
+            return False
         # Check if finger_print_signature is already in UserData
         if UserData.objects.filter(
             finger_print_signature=finger_print_signature
@@ -162,3 +166,17 @@ class RowDataValidator:
         """Checks if a string represents a valid email address."""
         email_regex = r"[^@]+@[^@]+\.[^@]+"
         return re.match(email_regex, email_string) is not None
+
+    @staticmethod
+    def is_hashed(hashed_string):
+        try:
+            # Attempt to decode the string using SHA256
+            hashlib.sha256(hashed_string.encode()).hexdigest()
+            return True
+        except TypeError:
+            return False
+        except UnicodeEncodeError:
+            return False
+        except Exception as e:
+            print("An error occurred: ", e)
+            return False
