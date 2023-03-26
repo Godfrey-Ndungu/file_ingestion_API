@@ -23,6 +23,9 @@ def process_uploaded_file(id):
         # Read the file using FileReader
         rows = FileReader.read_file(file_path)
 
+        # Update file upload status to 'processing'
+        file.start_processing()
+
         # Iterate over each row in the CSV file,
         # validate its data, and save it to the UserData model
         for row in rows:
@@ -40,12 +43,19 @@ def process_uploaded_file(id):
                 )
                 user_data.save()
 
+    # Update file upload status to 'processed'
+        file.mark_processed()
+
     except ValueError as exc:
         logger.error(f"Failed to process uploaded file: {exc}")
+        # Update file upload status to 'failed'
+        file.mark_failed()
         raise process_uploaded_file.retry(exc=exc, max_retries=3)
 
     except Exception as exc:
         logger.error(f"Failed to process uploaded file: {exc}")
+        # Update file upload status to 'failed'
+        file.mark_failed()
         raise process_uploaded_file.retry(exc=exc, max_retries=3)
 
     logger.info(f"Successfully processed uploaded file: {file_path}")
