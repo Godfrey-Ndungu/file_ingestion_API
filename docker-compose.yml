@@ -1,39 +1,60 @@
 version: '3'
 
 services:
+
   web:
     build: .
+    command: gunicorn fileUpload.wsgi:application --bind 0.0.0.0:8000
     ports:
-      - "8000:8000"
+      - "8000"
     depends_on:
       - db
       - redis
-      - worker
+      - celery_worker
+    env_file: .env-docker
+    volumes:
+      - .:/code
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_DB}
+      CELERY_BROKER_URL: 'redis://redis:6379/0'
+    networks:
+      - app_network
+      
     restart: always
+
   db:
     image: postgres:13
+    env_file: .env-docker
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_DB}
+    networks:
+      - app_network
+
   redis:
-    image: redis:6-alpine
-  worker:
+    image: redis:latest
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
+  celery_worker:
     build: .
-    command: celery -A myproject worker --loglevel=info
+    command: celery -A fileUpload worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair --pool=solo
     depends_on:
-      - db
       - redis
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_DB}
+    env_file: .env-docker
+    networks:
+      - app_network
+
 volumes:
   postgres_data:
+  redis_data:
 
+networks:
+  app_network:
+    driver: bridge

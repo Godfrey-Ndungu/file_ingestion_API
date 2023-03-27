@@ -9,6 +9,9 @@ COPY requirements.txt .
 # Install dependencies
 RUN pip install -r requirements.txt
 
+# Install gunicorn
+RUN pip install gunicorn
+
 # Copy the Django project
 COPY . .
 
@@ -20,4 +23,4 @@ ENV DJANGO_SETTINGS_MODULE=fileUpload.development
 ENV PYTHONUNBUFFERED=1
 
 # Start the Django web server with auto-reloading
-CMD ["./manage.py", "runserver", "0.0.0.0:8000", "--noreload"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "fileUpload.wsgi"]
