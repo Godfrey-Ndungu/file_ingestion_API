@@ -17,6 +17,42 @@ Setup GitHooks:
 3:Copy the conf/hooks/pre-commit file to the .git/hooks directory  
 4:Make the pre-commit file executable by running the command:chmod +x .git/hooks/pre-commit  
 5:Verify that the pre-commit hook is set up correctly by running the command:pre-commit run --all-files
+## Setting Up Docker
+
+
+Docker Setup
+This document describes the steps needed to setup a local development environment using Docker.
+
+Prerequisites
+-Docker installed on your local machine. Refer to the official Docker documentation for installation instructions.
+1.Docker Compose plugin installed on your local machine. Refer to the official Docker Compose documentation for installation instructions.
+Setup 
+
+2.Clone the repository to your local machine.
+In the root directory of the project, create a file named .env-docker with the following content:
+
+```bash
+SECRET_KEY
+ALLOWED_HOSTS
+DEBUG
+DB_NAME
+DB_USER
+DB_PASSWORD
+DB_HOST="db" #this is used in compose file
+DB_PORT
+```
+
+3.Build the Docker containers using the following command:
+```bash
+docker-compose build
+```
+4.Start the Docker containers using the following command:
+```bash
+docker-compose up
+```
+
+
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
