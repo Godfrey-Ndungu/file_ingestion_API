@@ -1,39 +1,53 @@
 #!/bin/bash
 
-# Activate the virtual environment
-source venv/bin/activate
-cd fileUpload
+# Check if OS is Unix or Windows and run appropriate code
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  # Install required packages
+  sudo apt update
+  sudo apt install python3 python3-pip python3-venv python3-setuptools bionic
 
-# Run Flake8 to check for PEP8 violations
-flake8 --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=migrations .
-flake8_status=$?
+  # Install and start Postgres
+  sudo apt install postgresql
+  sudo systemctl start postgresql
 
-# Run Black to check and format the code
-black . --check --diff
-black_status=$?
-
-# If either Flake8 or Black has issues, display a helpful message
-if [ $flake8_status != 0 ] || [ $black_status != 0 ]; then
-  echo ""
-  echo "COMMIT REJECTED: Please fix the following issues before committing:"
-  echo ""
-  if [ $flake8_status != 0 ]; then
-    echo "* PEP8 style guide violations detected in the following files:"
-    echo ""
-    flake8 --select=E9,F63,F7,F82 --show-source --exclude=migrations .
-    echo ""
-  fi
-  if [ $black_status != 0 ]; then
-    echo "* Code formatting issues detected in the following files:"
-    echo ""
-    black --diff .
-    echo ""
-  fi
-  echo "Aborting commit."
+  # Install and start Redis
+  sudo apt install redis-server
+  sudo systemctl start redis-server
+elif [[ "$OSTYPE" == "win"* ]]; then
+  # Windows code goes here
+  echo "Windows is not supported yet."
+  exit 1
+else
+  echo "Unsupported OS."
   exit 1
 fi
 
-# Deactivate the virtual environment
-deactivate
+# Create virtual environment
+python3 -m venv env
 
-exit 0
+# Add .env file
+echo "SECRET_KEY=\"\"" >> .env
+echo "ALLOWED_HOSTS=\"\"" >> .env
+echo "DEBUG=" >> .env
+echo "DB_NAME=\"\"" >> .env
+echo "DB_USER=\"\"" >> .env
+echo "DB_PASSWORD=\"\"" >> .env
+echo "DB_HOST=\"\"" >> .env
+echo "DB_PORT=\"\"" >> .env
+
+# Install requirements
+source env/bin/activate
+pip install -r requirements.txt
+
+# Ask user to set up DB
+echo "Please set up the database and update the .env file with the necessary information. Once you have done this, type 'y' to continue."
+read answer
+
+if [ "$answer" != "y" ]; then
+  echo "Aborting."
+  exit 1
+fi
+
+# Run Django migrations and server
+python manage.py migrate --settings=fileUpload.development
+python manage.py runserver --settings=fileUpload.development
