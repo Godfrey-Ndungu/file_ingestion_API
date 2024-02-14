@@ -1,5 +1,6 @@
 
 # FILE UPLOAD
+
 This project aims to build a REST API using Django and Django Rest Framework (DRF) to allow users to upload a file containing billions of records. The preferred database for this project is Postgres. The file to be uploaded will have a number of headers including first name, last name, national ID, birth date, address, country, phone number, email, and fingerprint signature.
 
 
